@@ -2,14 +2,15 @@
 
 require_once "iPage.php";
 
-class daoEditora implements iPage
+class daoEmprestimo implements iPage
 {
 
     public function remover($source)
     {
         try {
-            $statement = Conexao::getInstance()->prepare("DELETE FROM tb_editora WHERE idtb_editora = :id");
-            $statement->bindValue(":id", $source->getIdEditora());
+            $statement = Conexao::getInstance()->prepare("DELETE FROM tb_emprestimo WHERE tb_usuario_idtb = :idUsuario AND tb_exemplar_idtb_exemplar = :idExemplar");
+            $statement->bindValue(":idUsuario", $source->getUsuario()->getIdtbUsuario());
+            $statement->bindValue(":idExemplar", $source->getExemplar()->getIdExemplar());
             if ($statement->execute()) {
                 return "<script> alert('Registo foi excluído com êxito !'); </script>";
             } else {
@@ -24,10 +25,17 @@ class daoEditora implements iPage
     {
         try {
             if ($source->getIdEditora() != "") {
-                $statement = Conexao::getInstance()->prepare("UPDATE tb_editora SET nomeEditora=:nome WHERE idtb_editora = :id;");
-                $statement->bindValue(":id", $source->getIdEditora());
+                $statement = Conexao::getInstance()->prepare("UPDATE tb_emprestimo
+                                                                           SET dataEmprestimo = :dataEmprestimo
+                                                                             , observacao = :observacao
+                                                                         WHERE tb_usuaio_idtb_usuaio = :idUsuario
+                                                                           AND tb_exemplar_idtb_exemplar = :idExemplar;");
+                $statement->bindValue(":dataEmprestimo", $source->getDataEmprestimo());
+                $statement->bindValue(":observacao", $source->getObservacao());
+                $statement->bindValue(":idUsuario", $source->getUsuario()->getIdtbUsuario());
+                $statement->bindValue(":idExemplar", $source->getExemplar()->getIdExemplar());
             } else {
-                $statement = Conexao::getInstance()->prepare("INSERT INTO tb_editora (nomeEditora) VALUES (:nome)");
+                $statement = Conexao::getInstance()->prepare("INSERT INTO tb_emprestimo (nomeEditora) VALUES (:nome)");
             }
             $statement->bindValue(":nome", $source->getNomeEditora());
             if ($statement->execute()) {
