@@ -9,13 +9,13 @@
 class exemplar
 {
     private $idExemplar;
-    private $livro;
+    private $idLivro;
     private $tipoLivro;
 
-    public function __construct($idExemplar, $livro, $tipoLivro)
+    public function __construct($idExemplar, $idLivro, $tipoLivro)
     {
         $this->idExemplar = $idExemplar;
-        $this->livro = $livro;
+        $this->idLivro = $idLivro;
         $this->tipoLivro = $tipoLivro;
     }
 
@@ -29,14 +29,14 @@ class exemplar
         $this->idExemplar = $idExemplar;
     }
 
-    public function getLivro()
+    public function getIdLivro()
     {
-        return $this->livro;
+        return $this->idLivro;
     }
 
-    public function setLivro($livro): void
+    public function setIdLivro($idLivro): void
     {
-        $this->livro = $livro;
+        $this->idLivro = $idLivro;
     }
 
     public function getTipoLivro()
