@@ -25,16 +25,31 @@ class daoLivro implements iPage
         try {
             if ($source->getIdtbUsuario() != "") {
                 $statement = Conexao::getInstance()->prepare("UPDATE tb_livro 
-                                                                 SET tb_livro_idtb_livro = :idLivro
-                                                                   , tipoExemplar = :tipo
+                                                                 SET titulo = :titulo
+                                                                   , isbn = :isbn
+                                                                   , edicao = :edicao
+                                                                   , ano = :ano
+                                                                   , upload = :upload
+                                                                   , tb_editora_idtb_editora = :tb_editora_idtb_editora
+                                                                   , tb_categoria_idtb_categoria = :tb_categoria_idtb_categoria
                                                                WHERE idtb_livro = :id;");
                 $statement->bindValue(":id", $source->getIdExemplar());
             } else {
                 $statement = Conexao::getInstance()->prepare("INSERT 
-                                                                INTO tb_livro (tb_livro_idtb_livro
-                                                                            , tipoExemplar) 
-                                                              VALUES (:idLivro
-                                                                     , :tipo)");
+                                                                INTO tb_livro (titulo
+                                                                            , isbn
+                                                                            , edicao
+                                                                            , ano
+                                                                            , upload
+                                                                            , tb_editora_idtb_editora
+                                                                            , tb_categoria_idtb_categoria) 
+                                                              VALUES (:titulo
+                                                                     , :isbn
+                                                                     , :edicao
+                                                                     , :ano
+                                                                     , :upload
+                                                                     , :tb_editora_idtb_editora
+                                                                     , :tb_categoria_idtb_categoria)");
             }
             $statement->bindValue(":idLivro", $source->getIdLivro());
             $statement->bindValue(":tipo", $source->getTipoLivro());
