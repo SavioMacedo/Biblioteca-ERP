@@ -49,7 +49,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
 
                         </div>
                         <div class='content table-responsive'>
-                            <form action="?act=save&id=" method="POST" name="form1">
+                            <form action="?page=autores&act=save&id=" method="POST" name="form1">
 
                                 <input type="hidden" name="id" value="<?php
                                 // Preenche o id no campo id com um valor "value"
@@ -66,8 +66,12 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                             </form>
                             <?php
                                 echo (isset($msg) && ($msg != null || $msg != "")) ? $msg : '';
+                                $parameter = [
+                                    ["ID","idtb_autores"],
+                                    ["Nome", "nomeAutor"]
+                                ];
                                 //chamada a paginação
-                                $object->tabelapaginada();
+                                Functions::constructGrid($object->getAll(), $parameter, $page);
                             ?>
                         </div>
                     </div>

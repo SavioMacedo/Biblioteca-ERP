@@ -14,7 +14,7 @@
   <!--  Paper Dashboard core CSS    -->
   <link href='../assets/css/paper-dashboard.css' rel='stylesheet'/>
 
-  <!--  Fonts and icons     -->
+  <!--  Fonts and icons -->
   <link href='http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css' rel='stylesheet'>
   <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
   <link href='../assets/css/themify-icons.css' rel='stylesheet'>
@@ -31,24 +31,31 @@
                 <a href='index.php'><img src="assets/img/logo.jpg" height="150" width="200"></a>
                 <h4>Biblioteca</h4>
                 <small></small>
-                <a class='btn btn-success'  href="logout.php">Logout</a>
+                <?php
+                    if($account_logged != null)
+                        echo "<a class='btn btn-success'  href='?page=logout'>Logout</a>";            
+                ?>
             </div>
 
             <?php
-            foreach($config['Menu'] as $menu)
-            {
-                $state = ($menu[1] == $page) ? "class='active'" : "";
 
-                echo "
-                    <ul class=\"nav\">
-                        <li $state>
-                            <a href='?page=$menu[1]'>
-                                <i class=\"$menu[2]\"></i>
-                                <p>$menu[0]</p>
-                            </a>
-                        </li>
-                    </ul>
-                ";
+            if($account_logged != null)
+            {
+                foreach($config['Menu'] as $menu)
+                {
+                    $state = ($menu[1] == $page) ? "class='active'" : "";
+
+                    echo "
+                        <ul class=\"nav\">
+                            <li $state>
+                                <a href='?page=$menu[1]'>
+                                    <i class=\"$menu[2]\"></i>
+                                    <p>$menu[0]</p>
+                                </a>
+                            </li>
+                        </ul>
+                    ";
+                }
             }
             
             ?>

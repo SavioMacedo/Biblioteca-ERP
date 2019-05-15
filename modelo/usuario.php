@@ -15,7 +15,7 @@ class usuario
     private $senha;
     private $email;
 
-    public function __construct($idtb_usuario, $nomeUsuario, $tipo, $senha, $email)
+    public function __construct($idtb_usuario, $nomeUsuario, $tipo, $email, $senha)
     {
         $this->idtb_usuario = $idtb_usuario;
         $this->nomeUsuario = $nomeUsuario;

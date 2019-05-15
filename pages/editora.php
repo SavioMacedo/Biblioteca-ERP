@@ -1,15 +1,10 @@
 <?php
 
-require_once "../view/template.php";
-require_once "../dao/daoAutor.php";
-require_once "../modelo/autor.php";
-require_once "../db/Conexao.php";
+require_once "./dao/daoEditora.php";
+require_once "./modelo/editora.php";
+require_once "./db/Conexao.php";
 
-$object = new daoAutor();
-
-template::header();
-template::sidebar();
-template::mainpanel();
+$object = new daoEditora();
 
 // Verificar se foi enviando dados via POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -22,23 +17,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
-    $autor = new autor($id, "");
-    $resultado = $object->atualizar($autor);
-    $id = $resultado->getIdtbAutores();
-    $nome = $resultado->getNomeAutor();
+    $editora = new editora($id, "");
+    $resultado = $object->atualizar($editora);
+    $id = $resultado->getIdEditora();
+    $nome = $resultado->getNomeEditora();
 
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $nome != "" ) {
-    $autor = new autor($id, $nome);
-    $msg = $object->salvar($autor);
+    $editora = new editora($id, $nome);
+    $msg = $object->salvar($editora);
     $id = null;
     $nome = null;
 
 }
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
-    $autor = new autor($id, "");
-    $msg = $object->remover($autor);
+    $editora = new editora($id, "");
+    $msg = $object->remover($editora);
     $id = null;
 }
 ?>
@@ -49,12 +44,12 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                 <div class='col-md-12'>
                     <div class='card'>
                         <div class='header'>
-                            <h4 class='title'>Autores</h4>
-                            <p class='category'>Lista de Autores do Sistema</p>
+                            <h4 class='title'>Editoras</h4>
+                            <p class='category'>Lista de Editoras do Sistema</p>
 
                         </div>
                         <div class='content table-responsive'>
-                            <form action="?act=save&id=" method="POST" name="form1">
+                            <form action="?page=editora&act=save&id=" method="POST" name="form1">
 
                                 <input type="hidden" name="id" value="<?php
                                 // Preenche o id no campo id com um valor "value"
@@ -72,7 +67,12 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                             <?php
                                 echo (isset($msg) && ($msg != null || $msg != "")) ? $msg : '';
                                 //chamada a paginação
-                                $object->tabelapaginada();
+                                $parameter = [
+                                    ["ID","idtb_editora"],
+                                    ["Nome", "nomeEditora"]
+                                ];
+                                //chamada a paginação
+                                Functions::constructGrid($object->getAll(), $parameter, $page);
                             ?>
                         </div>
                     </div>
@@ -80,7 +80,3 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
             </div>
         </div>
     </div>
-
-<?php
-template::footer();
-?>

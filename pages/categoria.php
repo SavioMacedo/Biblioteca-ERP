@@ -26,7 +26,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $nome != "" ) {
     $categoria = new categoria($id, $nome);
-    $msg = $object->salvar($autor);
+    $msg = $object->salvar($categoria);
     $id = null;
     $nome = null;
 
@@ -49,7 +49,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
 
                         </div>
                         <div class='content table-responsive'>
-                            <form action="?act=save&id=" method="POST" name="form1">
+                            <form action="?page=categoria&act=save&id=" method="POST" name="form1">
 
                                 <input type="hidden" name="id" value="<?php
                                 // Preenche o id no campo id com um valor "value"
@@ -67,7 +67,12 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                             <?php
                                 echo (isset($msg) && ($msg != null || $msg != "")) ? $msg : '';
                                 //chamada a paginação
-                                $object->tabelapaginada();
+                                $parameter = [
+                                    ["ID","idtb_categoria"],
+                                    ["Nome", "nomeCategoria"]
+                                ];
+                                //chamada a paginação
+                                Functions::constructGrid($object->getAll(), $parameter, $page);
                             ?>
                         </div>
                     </div>

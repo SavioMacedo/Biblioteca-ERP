@@ -10,5 +10,5 @@ require_once "iDAO.php";
 
 interface iPage extends iDAO
 {
-    public function tabelapaginada();
+    public function getAll();
 }

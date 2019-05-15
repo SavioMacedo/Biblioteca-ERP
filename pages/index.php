@@ -9,6 +9,13 @@
                     </div>
                     <div class='content table-responsive'>
                           <h4 class="title">Seja bem-vindo </h4>
+                          <?php
+                           $graficos = $config['Graficos'];
+                           foreach($graficos as $grafico)
+                           {
+                               echo "<img src='./graphics/$grafico' />";
+                           }
+                          ?>
                     </div>
                 </div>
             </div>

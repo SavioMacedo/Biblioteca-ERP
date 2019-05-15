@@ -6,7 +6,7 @@
  * Time: 16:31
  */
 
-require_once 'dao/usuarioDAO.php';
+require_once 'dao/daoUsuario.php';
 
 // session_start inicia a sessão
 session_start();
@@ -14,19 +14,18 @@ session_start();
 $login = $_POST['login'];
 $senha = $_POST['senha'];
 
-$usuario = new usuarioDAO();
+$usuario = new daoUsuario();
 
 $valido = $usuario->logar($login, $senha);
 
 if( $valido == true)
 {
-    $_SESSION['login'] = $login;
-    $_SESSION['senha'] = $senha;
+    $_SESSION['Account'] = $valido; 
     header('location:index.php');
 }
 else{
-    unset ($_SESSION['login']);
-    unset ($_SESSION['senha']);
+    unset ($_SESSION['Account']);
+    $_SESSION['ViewErrors'] = $valido;
     header('location:index.php');
 
 }

@@ -12,13 +12,15 @@ class emprestimo
     private $usuario;
     private $exemplar;
     private $dataEmprestimo;
+    private $dataDevolucao;
     private $observacao;
 
-    public function __construct($usuario, $exemplar, $dataEmprestimo, $observacao)
+    public function __construct($usuario, $exemplar, $dataEmprestimo, $dataDevolucao, $observacao)
     {
         $this->usuario = $usuario;
         $this->exemplar = $exemplar;
         $this->dataEmprestimo = $dataEmprestimo;
+        $this->dataDevolucao = $dataDevolucao;
         $this->observacao = $observacao;
     }
 
@@ -50,6 +52,16 @@ class emprestimo
     public function setDataEmprestimo($dataEmprestimo): void
     {
         $this->dataEmprestimo = $dataEmprestimo;
+    }
+
+    public function getDataDevolucao()
+    {
+        return $this->dataDevolucao;
+    }
+
+    public function setDataDevolucao($dataDevolucao): void
+    {
+        $this->dataDevolucao = $dataDevolucao;
     }
 
     public function getObservacao()
