@@ -33,8 +33,16 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $nome != "" ) {
 }
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
     $categoria = new categoria($id, "");
-    $msg = $object->remover($categoria);
-    $id = null;
+        
+    $valida = $object->hasLivros($categoria);
+
+    if(!$valida)
+    {
+        $msg = $object->remover($categoria);
+        $id = null;
+    }
+    else
+        echo "<script> alert('Não é possivel excluir uma categoria que possua livros associados a ela!'); </script>";
 }
 ?>
 

@@ -9,7 +9,7 @@
 
         public static function DropDownFor($data, $fieldName, $fieldKey, $fieldValue, $friendlyName, $selected = "")
         {
-            $options = "<option>Selecione um $friendlyName</option>";
+            $options = "<option value=''>Selecione um $friendlyName</option>";
 
             foreach($data as $option)
             {
@@ -21,7 +21,7 @@
             echo "
             <div class='form-group'>
                 <label for='$fieldName'>$friendlyName</label>
-                <select class='form-control' name='$fieldName' id='$fieldName' required>
+                <select class='form-control' name='$fieldName' id='$fieldName'>
                     $options
                 </select>
             </div>
@@ -35,7 +35,7 @@
             //endereço atual da página
             $endereco = $_SERVER ['PHP_SELF'];
             /* Constantes de configuração */
-            define('QTDE_REGISTROS', 2);
+            define('QTDE_REGISTROS', 10);
             define('RANGE_PAGINAS', 3);
             /* Recebe o número da página via parâmetro na URL */
             $pagina_atual = (isset($_GET['pagination']) && is_numeric($_GET['pagination'])) ? $_GET['pagination'] : 1;
@@ -66,7 +66,7 @@
                 $column = "";
                 foreach ($arrayCampos as $columName)
                 {
-                    if($columName != null)
+                    if($columName[0] != null)
                         $column .= "<th style='text-align: center; font-weight: bolder;'>".$columName[0]."</th>";
                 }
                 echo "

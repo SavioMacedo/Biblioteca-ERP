@@ -113,5 +113,6 @@
 
 	<!--  Checkbox, Radio & Switch Plugins -->
 	<script src="assets/js/bootstrap-checkbox-radio.js"></script>
+    <script src="assets/js/functions.js"></script>
 
 </html>

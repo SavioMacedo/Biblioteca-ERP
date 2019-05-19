@@ -8,16 +8,28 @@ require_once "./db/Conexao.php";
 $object = new daoExemplar();
 $objectLivro = new daoLivro();
 $objectLivro = $objectLivro->getAll();
-//$livroEnumerable = System\Linq\Enumerable::createEnumerable($objectLivro);
+
+$objectCircular = [
+    [
+        "key" => "N",
+        "value" => "Não"
+    ],
+    [
+        "key" => "S",
+        "value" => "Sim"
+    ]
+];
 
 // Verificar se foi enviando dados via POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = (isset($_POST["id"]) && $_POST["id"] != null) ? $_POST["id"] : "";
     $livro = (isset($_POST["livro"]) && $_POST["livro"] != null) ? $_POST["livro"] : "";
+    $podeCircular = (isset($_POST["podeCircular"]) && $_POST["podeCircular"] != null) ? $_POST["podeCircular"] : "";
 } else if (!isset($id)) {
     // Se não se não foi setado nenhum valor para variável $id
     $id = (isset($_GET["id"]) && $_GET["id"] != null) ? $_GET["id"] : "";
     $livro = null;
+    $podeCircular = null;
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
@@ -25,19 +37,31 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
     $resultado = $object->atualizar($exemplar);
     $id = $resultado->getIdExemplar();
     $livro = $resultado->getLivro();
+    $podeCircular = $resultado->podeCircular();
 }
 
-if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $livro != "" ) {
-    $exemplar = new exemplar($id, $livro, "999");
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $livro != "" && $podeCircular != "" ) {
+    $exemplar = new exemplar($id, $livro, $podeCircular);
     $msg = $object->salvar($exemplar);
     $id = null;
     $livro = null;
+    $podeCircular = null;
 
 }
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
     $exemplar = new exemplar($id, "", "");
-    $msg = $object->remover($exemplar);
-    $id = null;
+
+        
+    $valida = $object->hasEmprestimo($exemplar);
+
+    if(!$valida)
+    {
+        $msg = $object->remover($exemplar);
+        $id = null;
+        $podeCircular = null;
+    }
+    else
+        echo "<script> alert('Não é possivel excluir um exemplar que possua registros de empréstimos !'); </script>";
 }
 ?>
 
@@ -63,6 +87,12 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                 Functions::DropDownFor($objectLivro, "livro", "idtb_livro", "titulo", "Livro", $selectedValue);
                                 ?>
                                 <br/>
+
+                                <?php
+                                $selectedValue = (isset($podeCircular) && ($podeCircular != null || $podeCircular != "")) ? $podeCircular : '';
+                                Functions::DropDownFor($objectCircular, "podeCircular", "key", "value", "Pode Circular", $selectedValue);
+                                ?>
+                                <br/>
                                 <input class="btn btn-success" type="submit" value="REGISTRAR">
                                 <hr>
                             </form>
@@ -71,7 +101,8 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                 //chamada a paginação
                                 $parameter = [
                                     ["ID","idtb_exemplar"],
-                                    ["Titulo do Livro", "titulo"]
+                                    ["Titulo do Livro", "titulo"],
+                                    ["Pode Circular", "podeCircular"]
                                 ];
                                 //chamada a paginação
                                 Functions::constructGrid($object->getAll(), $parameter, $page);

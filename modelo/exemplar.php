@@ -9,14 +9,14 @@
 class exemplar
 {
     private $idExemplar;
-    private $idLivro;
-    private $tipoLivro;
+    private $livro;
+    private $podeCircular;
 
-    public function __construct($idExemplar, $idLivro, $tipoLivro)
+    public function __construct($idExemplar, $livro, $podeCircular)
     {
         $this->idExemplar = $idExemplar;
-        $this->idLivro = $idLivro;
-        $this->tipoLivro = $tipoLivro;
+        $this->livro = $livro;
+        $this->podeCircular = $podeCircular;
     }
 
     public function getIdExemplar()
@@ -29,24 +29,24 @@ class exemplar
         $this->idExemplar = $idExemplar;
     }
 
-    public function getIdLivro()
+    public function getLivro()
     {
-        return $this->idLivro;
+        return $this->livro;
     }
 
-    public function setIdLivro($idLivro): void
+    public function setLivro($livro): void
     {
-        $this->idLivro = $idLivro;
+        $this->livro = $livro;
     }
 
-    public function getTipoLivro()
+    public function podeCircular()
     {
-        return $this->tipoLivro;
+        return $this->podeCircular;
     }
 
-    public function setTipoLivro($tipoLivro): void
+    public function setTipoLivro($podeCircular): void
     {
-        $this->tipoLivro = $tipoLivro;
+        $this->podeCircular = $podeCircular;
     }
 
 

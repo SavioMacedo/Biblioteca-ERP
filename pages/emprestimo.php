@@ -11,34 +11,46 @@ $object = new daoEmprestimo();
 $objectExemplar = new daoExemplar();
 $objectExemplar = $objectExemplar->getAll();
 
+$objectEmprestimos = $object->getAll();
+$objectEmprestimosExemplares = array();
+
+foreach($objectEmprestimos as $emprestimoTemp)
+{
+    if($emprestimoTemp->dataDevolucao == "0000-00-00 00:00:00")
+        array_push($objectEmprestimosExemplares, $emprestimoTemp->tb_exemplar_idtb_exemplar);
+}
+
+foreach($objectEmprestimosExemplares as $idExemplar)
+{
+    for($i = 0; $i < count($objectExemplar); $i++)
+    {
+        if($objectExemplar[$i]->idtb_exemplar == $idExemplar)
+            unset($objectExemplar[$i]);
+    }
+
+    $objectExemplar = array_values($objectExemplar);
+}
+
 $objectUsuario = new daoUsuario();
-$objectUsuario = $objectUsuario->getAll();
+$dadosUsuario = $objectUsuario->getAll();
 
 // Verificar se foi enviando dados via POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $id = (isset($_POST["id"]) && $_POST["id"] != null) ? $_POST["id"] : "";
-    $id = explode('-', $id);
     
-    if(cout($id) > 0)
-    {
-        $idExemplar = $id[1];
-        $idUsuario = $id[0];
-    }
-    else
-    {
-        $idExemplar = "";
-        $idUsuario = "";
-    }
+    $idExemplar = (isset($_POST["idExemplar"]) && $_POST["idExemplar"] != null) ? $_POST["idExemplar"] : "";
+    $idUsuario = (isset($_POST["idUsuario"]) && $_POST["idUsuario"] != null) ? $_POST["idUsuario"] : "";
 
     $dataEmprestimo = (isset($_POST["dataEmprestimo"]) && $_POST["dataEmprestimo"] != null) ? $_POST["dataEmprestimo"] : "";
     $dataDevolucao = (isset($_POST["dataDevolucao"]) && $_POST["dataDevolucao"] != null) ? $_POST["dataDevolucao"] : "";
     $observacao = (isset($_POST["observacao"]) && $_POST["observacao"] != null) ? $_POST["observacao"] : "";
+
 } else if (!isset($id)) {
+
     // Se não se não foi setado nenhum valor para variável $id
-    $id = (isset($_POST["id"]) && $_POST["id"] != null) ? $_POST["id"] : "";
+    $id = (isset($_GET["id"]) && $_GET["id"] != null) ? $_GET["id"] : "";
     $id = explode('-', $id);
     
-    if(cout($id) > 0)
+    if(count($id) > 1)
     {
         $idExemplar = $id[1];
         $idUsuario = $id[0];
@@ -55,28 +67,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $idExemplar != "" && $idUsuario != "") {
-    $emprestimo = new emprestimo($idUsuario, $idExemplar, "", "", "");
+    $emprestimo = new emprestimo($idUsuario, $idExemplar, "", "", "", "");
     $resultado = $object->atualizar($emprestimo);
     $idExemplar = $resultado->getExemplar();
     $dataDevolucao = $resultado->getDataDevolucao();
     $dataEmprestimo = $resultado->getDataEmprestimo();
     $observacao = $resultado->getObservacao();
     $idUsuario = $resultado->getUsuario();
+    $objectExemplar = new daoExemplar();
+    $objectExemplar = $objectExemplar->getAll();
 
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $idExemplar != "" && $idExemplar != "" && $observacao != "" ) {
-    $emprestimo = new emprestimo($idUsuario, $idExemplar, "", $dataDevolucao, $observacao);
-    $msg = $object->salvar($emprestimo);
-    $idExemplar = null;
-    $dataEmprestimo = null;
-    $dataDevolucao = null;
-    $observacao = null;
-    $idUsuario = null;
+    $emprestimo = new emprestimo($idUsuario, $idExemplar, "", "", "", $observacao);
+
+    $valida = $objectUsuario->isHabilitado($idUsuario);
+
+    if($valida)
+    {
+        $msg = $object->salvar($emprestimo);
+        $idExemplar = null;
+        $dataEmprestimo = null;
+        $dataDevolucao = null;
+        $observacao = null;
+        $idUsuario = null;
+    }
+    else
+        echo "<script> alert('O Usuario possui o limite máximo de empréstimos ativos:\n -> Alunos e Funcionários: 3 abertos. \n -> Professores: 5 abertos. !'); </script>";
 
 }
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $idUsuario != "" && $idExemplar != "") {
-    $emprestimo = new emprestimo($idUsuario, $idExemplar, "", "", "");
+    $emprestimo = new emprestimo($idUsuario, $idExemplar, "", "", "", "");
     $msg = $object->remover($emprestimo);
     $idExemplar = null;
     $dataEmprestimo = null;
@@ -109,11 +131,11 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $idUsuario != "" && 
 
                                 <?php
                                     $selectedValue = (isset($idUsuario) && ($idUsuario != null || $idUsuario != "")) ? $idUsuario : '';
-                                    Functions::DropDownFor($objectUsuario, "idUsuario", "idtb_usuario", "nomeUsuario", "Usuario", $selectedValue);
+                                    Functions::DropDownFor($dadosUsuario, "idUsuario", "idtb_usuario", "nomeUsuario", "Usuario", $selectedValue);
                                 ?>
 
-                                <Label>Data de Devolução</Label>
-                                <input class="form-control" type="date" name="dataDevolucao" value="<?php
+                                <Label>Data do produto devolvido</Label>
+                                <input class="form-control" type="date" size="50" name="dataDevolucao" value="<?php
                                 // Preenche o nome no campo nome com um valor "value"
                                 echo (isset($dataDevolucao) && ($dataDevolucao != null || $dataDevolucao != "")) ? $dataDevolucao : '';
                                 ?>"/>
@@ -125,6 +147,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $idUsuario != "" && 
                                 echo (isset($observacao) && ($observacao != null || $observacao != "")) ? $observacao : '';
                                 ?>" required/>
                                 <br/>
+
                                 <input class="btn btn-success" type="submit" value="REGISTRAR">
                                 <hr>
                             </form>
@@ -135,7 +158,8 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $idUsuario != "" && 
                                     ["Usuario","nomeUsuario"],
                                     ["Exemplar", "titulo"],
                                     ["Data de Emprestimo", "dataEmprestimo"],
-                                    ["Data de Devolução", "dataDevolucao"],
+                                    ["Data Prevista Devolução", "dataPrevista"],
+                                    ["Data Devolvido", "dataDevolucao"],
                                     ["Observação", "observacao"]
                                 ];
                                 //chamada a paginação

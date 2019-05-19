@@ -75,4 +75,20 @@ class daoCategoria implements iPage
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_OBJ);
     }
+
+    public function hasLivros(categoria $source)
+    {
+        try
+        {
+            $statement = Conexao::getInstance()->prepare("SELECT * from tb_livro where tb_categoria_idtb_categoria = :idCategoria");
+            $statement->bindValue(":idCategoria", $source->getIdCategoria());
+            $statement->execute();
+            $livros = $statement->fetchAll(PDO::FETCH_OBJ);
+            return (count($livros) > 0);
+        }
+        catch (PDOException $erro) 
+        {
+            return "Erro: " . $erro->getMessage();
+        }
+    }
 }

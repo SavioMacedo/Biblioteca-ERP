@@ -1,22 +1,22 @@
 <?php
     require_once "../classes/phplot/phplot.php";
+    require_once "../db/Conexao.php";
+    require_once "../dao/daoEmprestimo.php";
 
-    // Array com dados de Ano x Índice de fecundidade Brasileira 1940-2000
-// Valores por década
-$data = array(
-    array('1940' , 6.2 ), 
-    array('1950' , 6.2 ),
-    array('1960' , 6.3 ),
-    array('1970' , 5.8 ),
-    array('1980' , 4.4 ),
-    array('1991' , 2.9 ),
-    array('2000' , 2.3 )
-    );     
+    $daoEmprestimo = new daoEmprestimo();
+    $data = array();
+    $dadosEmprestimo = $daoEmprestimo->getGraficoData();
+
+    foreach($dadosEmprestimo as $dadosLoop)
+    {
+        array_push($data, [$dadosLoop->Mes, $dadosLoop->quantidadeMes]);
+    }
+  
 # Cria um novo objeto do tipo PHPlot com 500px de largura x 350px de altura                 
-$plot = new PHPlot(500 , 350);     
+$plot = new PHPlot(450 , 325);     
 
 // Organiza Gráfico -----------------------------
-$plot->SetTitle('Taxa de fecundidade no Brasil 1940-2000');
+$plot->SetTitle('Emprestimo de livros / ultimos 3 meses');
 # Precisão de uma casa decimal
 $plot->SetPrecisionY(1);
 # tipo de Gráfico em barras (poderia ser linepoints por exemplo)
@@ -31,7 +31,7 @@ $plot->SetDataValues($data);
 # Seta os traços (grid) do eixo X para invisível
 $plot->SetXTickPos('none');
 # Texto abaixo do eixo X
-$plot->SetXLabel("Fonte: Censo Demográfico 2000, Fecundidade e Mortalidade Infantil, Resultados\n Preliminares da Amostra IBGE, 2002");
+$plot->SetXLabel("Dados da quantidade de livros que foram emprestados por mes extraidos\n Considerado os dados dos ultimos 3 meses ate o dia de hoje.");
 # Tamanho da fonte que varia de 1-5
 $plot->SetXLabelFontSize(2);
 $plot->SetAxisFontSize(2);

@@ -13,7 +13,8 @@ $objectEditora = $objectEditora->getAll();
 
 $objectCategoria = new daoCategoria();
 $objectCategoria = $objectCategoria->getAll();
-//$livroEnumerable = System\Linq\Enumerable::createEnumerable($objectLivro);
+
+$dadosGrid = $object->getAll();
 
 // Verificar se foi enviando dados via POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
@@ -70,15 +71,31 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $titulo != "" && $i
 }
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
     $livro = new livro($id, "", "", "", "", "", "", "");
-    $msg = $object->remover($livro);
-    $titulo = null;
-    $isbn = null;
-    $edicao = null;
-    $ano = null;
-    $upload = null;
-    $editora = null;
-    $categoria = null;
+    
+    $valida = $object->hasExemplares($livro);
+
+    if(!$valida)
+    {
+        $msg = $object->remover($livro);
+        $titulo = null;
+        $isbn = null;
+        $edicao = null;
+        $ano = null;
+        $upload = null;
+        $editora = null;
+        $categoria = null;
+    }
+    else
+        echo "<script> alert('Não é possivel excluir um livro que possui exemplares !'); </script>";
+
+
 }
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "consulta")
+{
+    $livro = new livro($id, $titulo, "", $edicao, $ano, "", $editora, $categoria);
+    $dadosGrid = $object->getFiltered($livro);
+}
+
 ?>
 
     <div class='content' xmlns="http://www.w3.org/1999/html">
@@ -89,10 +106,18 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                         <div class='header'>
                             <h4 class='title'>Livro</h4>
                             <p class='category'>Lista de Livros do Sistema</p>
-
                         </div>
                         <div class='content table-responsive'>
-                            <form action="?page=livro&act=save&id=" method="POST" name="form1">
+                            <form action="?page=livro&act=save&id=" method="POST" name="form1" id="form1">
+
+                                <div class='form-group'>
+                                    <label for='acao'>Ação</label>
+                                    <select class='form-control' name='acao' id='acao' onchange="formFunction(this)">
+                                        <option value="save">Cadastrar</option>
+                                        <option value="consulta">Consulta</option>
+                                    </select>
+                                </div>
+
 
                                 <input type="hidden" name="id" value="<?php
                                 // Preenche o id no campo id com um valor "value"
@@ -102,31 +127,31 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                 <input class="form-control" type="text" size="50" name="titulo" value="<?php
                                 // Preenche o nome no campo nome com um valor "value"
                                 echo (isset($titulo) && ($titulo != null || $titulo != "")) ? $titulo : '';
-                                ?>" required/>
+                                ?>" />
                                 <br/>
                                 <Label>ISBN</Label>
                                 <input class="form-control" type="text" size="50" name="isbn" value="<?php
                                 // Preenche o nome no campo nome com um valor "value"
                                 echo (isset($isbn) && ($isbn != null || $isbn != "")) ? $isbn : '';
-                                ?>" required/>
+                                ?>" />
                                 <br/>
                                 <Label>Edição</Label>
                                 <input class="form-control" type="text" size="50" name="edicao" value="<?php
                                 // Preenche o nome no campo nome com um valor "value"
                                 echo (isset($edicao) && ($edicao != null || $edicao != "")) ? $edicao : '';
-                                ?>" required/>
+                                ?>" />
                                 <br/>
                                 <Label>Ano</Label>
                                 <input class="form-control" type="text" size="50" name="ano" value="<?php
                                 // Preenche o nome no campo nome com um valor "value"
                                 echo (isset($ano) && ($ano != null || $ano != "")) ? $ano : '';
-                                ?>" required/>
+                                ?>" />
                                 <br/>
                                 <Label>Upload</Label>
                                 <input class="form-control" type="text" size="50" name="upload" value="<?php
                                 // Preenche o nome no campo nome com um valor "value"
                                 echo (isset($upload) && ($upload != null || $upload != "")) ? $upload : '';
-                                ?>" required/>
+                                ?>" />
                                 <br/>
                                 <?php
                                 $selectedValue = (isset($editora) && ($editora != null || $editora != "")) ? $editora : '';
@@ -138,7 +163,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                 Functions::DropDownFor($objectCategoria, "tb_categoria_idtb_categoria", "idtb_categoria", "nomeCategoria", "Categoria", $selectedValue);
                                 ?>
                                 <br/>
-                                <input class="btn btn-success" type="submit" value="REGISTRAR">
+                                <input class="btn btn-success" type="submit" id="submitForm" value="REGISTRAR">
                                 <hr>
                             </form>
                             <?php
@@ -150,10 +175,12 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                     ["ISBN", "isbn"],
                                     ["Ano de Publicação", "ano"],
                                     ["Editora do Livro", "editora"],
-                                    ["Categoria", "categoria"]
+                                    ["Categoria", "categoria"],
+                                    ["Exemplares Circulam", "exemplarCircular"],
+                                    ["Exemplares Não Circulam", "exemplarNaoCircular"]
                                 ];
                                 //chamada a paginação
-                                Functions::constructGrid($object->getAll(), $parameter, $page);
+                                Functions::constructGrid($dadosGrid, $parameter, $page);
                             ?>
                         </div>
                     </div>
