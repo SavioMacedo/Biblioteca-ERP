@@ -171,15 +171,12 @@ class daoEmprestimo implements iPage
         tb_emprestimo emprestimo,
         tb_reserva reserva,
         tb_exemplar exemplar,
-        tb_livro livro,
-        tb_categoria categoria
+        tb_livro livro
     where
-        emprestimo.dataEmprestimo between date_add(sysdate(), INTERVAL -1 MONTH) AND SYSDATE() and
         emprestimo.tb_exemplar_idtb_exemplar = exemplar.idtb_exemplar and
         livro.idtb_livro = exemplar.tb_livro_idtb_livro and
-        livro.tb_categoria_idtb_categoria = categoria.idtb_categoria and
         reserva.tb_exemplar_idtb_exemplar = emprestimo.tb_exemplar_idtb_exemplar
-    group by categoria.nomeCategoria";
+    group by date_format(emprestimo.dataEmprestimo, '%b')";
     
         $statement = Conexao::getInstance()->prepare($sql);
         $statement->execute();

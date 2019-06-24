@@ -1,15 +1,21 @@
 <?php
-    include './classes/fpdf/fpdf.php';
+    include './classes/fpdf/PDF_MemImage.php';
     include './db/Conexao.php';
     include './dao/daoReserva.php';
     include './dao/daoEmprestimo.php';
+
+    include './graphicsPdf/livroReservadoEmprestado.php';
+    include './graphicsPdf/livrosEmprestados.php';
+    include './graphicsPdf/livrosEmprestadosCategoria.php';
+    include './graphicsPdf/livrosReservados.php';
+    include './graphicsPdf/livrosReservadosCategoria.php';
 
     $daoReserva = new daoReserva();
     $daoEmprestimo = new daoEmprestimo();
 
     $dados = $daoEmprestimo->getGraficoEmprestadoReservado();
 
-    $pdf = new FPDF();
+    $pdf = new PDF_MemImage();
 
     //LivroReservadoEmprestado
     $pdf->AddPage();
@@ -30,6 +36,7 @@
         $pdf->Cell(95, 7, $dado->quantidadeMes,1,0,"C");
         $pdf->Ln();
     }
+    $pdf->GDImage($plotLivroReservadoEmprestado->img, 30, 50, 140);
 
     //LivroEmprestado
     $pdf->AddPage();
@@ -52,6 +59,7 @@
         $pdf->Cell(95, 7, $dado->quantidadeMes,1,0,"C");
         $pdf->Ln();
     }
+    $pdf->GDImage($plotLivrosEmrpestados->img, 30, 50, 140);
 
     //LivroEmprestadoCategoria
     $pdf->AddPage();
@@ -74,6 +82,7 @@
         $pdf->Cell(95, 7, $dado->quantidadeMes,1,0,"C");
         $pdf->Ln();
     }
+    $pdf->GDImage($plotLivrosEmprestadosCategoria->img, 30, 50, 140);
 
     //LivroReservado
     $pdf->AddPage();
@@ -96,6 +105,7 @@
         $pdf->Cell(95, 7, $dado->quantidadeMes,1,0,"C");
         $pdf->Ln();
     }
+    $pdf->GDImage($plotLivrosReservados->img, 30, 50, 140);
 
     //LivroReservadosCategoria
     $pdf->AddPage();
@@ -118,6 +128,7 @@
         $pdf->Cell(95, 7, $dado->quantidadeMes,1,0,"C");
         $pdf->Ln();
     }
+    $pdf->GDImage($plotLivrosReservadosCategorias->img, 30, 50, 140);
 
     $pdf->Output();
 ?>

@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     // as variáveis login e senha recebem os dados digitados na página anterior
     $login = $_POST['login'];
     $senha = $_POST['senha'];
+    $senha = md5($senha);
 
     $usuario = new daoUsuario();
 

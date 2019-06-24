@@ -87,7 +87,7 @@ class daoExemplar implements iPage
 
     public function getAll()
     {
-        $sql = "SELECT idtb_exemplar, (select titulo from tb_livro where idtb_livro = tb_livro_idtb_livro) titulo, podeCircular FROM tb_exemplar";
+        $sql = "SELECT idtb_exemplar, (select titulo from tb_livro where idtb_livro = tb_livro_idtb_livro) titulo, if(podeCircular='S', 'Sim', if(podeCircular='N','Não',podeCircular)) podeCircular FROM tb_exemplar";
         $statement = Conexao::getInstance()->prepare($sql);
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_OBJ);

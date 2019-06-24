@@ -11,6 +11,11 @@
     {
         array_push($data, [$dadosLoop->Mes, $dadosLoop->quantidadeMes]);
     }
+
+    function pickcolor($img, $data_array, $row, $col)
+    {
+        return mt_rand(0, 8);
+    }
   
 # Cria um novo objeto do tipo PHPlot com 500px de largura x 350px de altura                 
 $plot = new PHPlot(450 , 325);     
@@ -40,6 +45,9 @@ $plot->SetAxisFontSize(2);
 // Organiza eixo Y -------------------------------
 # Coloca nos pontos os valores de Y
 $plot->SetYDataLabelPos('plotin');
+
+$plot->SetCallback('data_color', 'pickcolor', $data);
+$plot->SetDataColors(array('green', 'yellow', 'black', 'red', 'blue', 'gray', 'navy', 'DarkGreen', 'peru'));
 // -----------------------------------------------
 
 // Desenha o Gráfico -----------------------------

@@ -8,7 +8,7 @@
 
 require_once "iPage.php";
 
-class daoUsuario implements iPage
+class daoTipoUsuario implements iPage
 {
 
     public function logar($email, $senha)
@@ -105,39 +105,6 @@ class daoUsuario implements iPage
         }
     }
 
-    public function getAll()
-    {
-        $sql = "SELECT idtb_usuario, nomeUsuario, if(tipo=1, 'Aluno', if(tipo=2,'Professor',if(tipo=3,'Diretor','Nada')))  tipo, email, '********' as senha FROM tb_usuario";
-        $statement = Conexao::getInstance()->prepare($sql);
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_OBJ);
-    }
-
-    public function isHabilitado($idUsuario)
-    {
-        $sql = "SELECT count(1) as contador, tipo from tb_emprestimo, tb_usuario where tb_usuario_idtb_usuario = tbid_usuario and tb_usuario_idtb_usuario = :tb_usuario_idtb_usuario and dataDevolucao = '0000-00-00 00:00:00'";
-        $statement = Conexao::getInstance()->prepare($sql);
-        $statement->bindValue(":tb_usuario_idtb_usuario", $idUsuario);
-        $statement->execute();
-        $obj = $statement->fetchAll(PDO::FETCH_OBJ);
-
-        if(count($obj) < 1)
-            return true;
-
-        switch($obj->tipo)
-        {
-            case "1":
-                return ($obj->contador < 3);
-            case "2":
-                return ($obj->contador < 3);
-            case "3":
-                return ($obj->contador < 5);
-
-            default:
-                return false;
-        }
-    }
-
     public function FirstOrDefault($idUsuario = "")
     {
         try
@@ -159,6 +126,15 @@ class daoUsuario implements iPage
         {
             return "Erro: " . $erro->getMessage();
         }
+    }
+
+    public function getAll()
+    {
+        $sql = "SELECT idtb_tipo_usuario, dc_tipo FROM bibliotecalpaw.tb_tipo_usuario";
+        
+        $statement = Conexao::getInstance()->prepare($sql);
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_OBJ);
     }
 
 }

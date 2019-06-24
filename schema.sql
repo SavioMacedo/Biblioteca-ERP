@@ -1,6 +1,6 @@
--- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for Win64 (AMD64)
+-- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for Win32 (AMD64)
 --
--- Host: localhost    Database: bibliotecalpaw
+-- Host: localhost    Database: bibliotecaLPAW
 -- ------------------------------------------------------
 -- Server version	10.1.38-MariaDB
 
@@ -111,7 +111,7 @@ CREATE TABLE `tb_emprestimo` (
 
 LOCK TABLES `tb_emprestimo` WRITE;
 /*!40000 ALTER TABLE `tb_emprestimo` DISABLE KEYS */;
-INSERT INTO `tb_emprestimo` VALUES (1,5,'2019-05-19 04:39:13','.','0000-00-00 00:00:00','2019-05-29 04:39:08'),(1,6,'2019-05-19 04:45:15','.','0000-00-00 00:00:00','2019-05-20 04:44:21'),(1,7,'2019-05-19 04:46:10','teste','0000-00-00 00:00:00','2019-05-20 04:45:50'),(1,8,'2019-05-19 04:45:32','.','0000-00-00 00:00:00','2019-05-29 04:45:27'),(1,9,'2019-05-19 18:06:33','.','0000-00-00 00:00:00','2019-05-29 18:06:31');
+INSERT INTO `tb_emprestimo` VALUES (2,5,'2019-06-24 16:26:35','.','0000-00-00 00:00:00',NULL),(2,8,'2019-06-24 16:34:17','.','0000-00-00 00:00:00',NULL),(3,9,'2019-06-24 21:03:07','.','0000-00-00 00:00:00',NULL),(4,6,'2019-06-24 21:01:56','.','0000-00-00 00:00:00',NULL),(4,7,'2019-06-24 16:28:39','.','0000-00-00 00:00:00',NULL),(4,10,'2019-05-24 21:04:48','.','0000-00-00 00:00:00',NULL);
 /*!40000 ALTER TABLE `tb_emprestimo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -127,7 +127,7 @@ CREATE TABLE `tb_exemplar` (
   `tb_livro_idtb_livro` int(11) NOT NULL,
   `podeCircular` varchar(1) NOT NULL,
   PRIMARY KEY (`idtb_exemplar`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,7 +136,7 @@ CREATE TABLE `tb_exemplar` (
 
 LOCK TABLES `tb_exemplar` WRITE;
 /*!40000 ALTER TABLE `tb_exemplar` DISABLE KEYS */;
-INSERT INTO `tb_exemplar` VALUES (5,2,'S'),(6,2,'N'),(7,2,'N'),(8,2,'S'),(9,2,'S');
+INSERT INTO `tb_exemplar` VALUES (5,2,'S'),(6,2,'N'),(7,2,'N'),(8,2,'S'),(9,2,'S'),(10,3,'S');
 /*!40000 ALTER TABLE `tb_exemplar` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -157,7 +157,7 @@ CREATE TABLE `tb_livro` (
   `tb_editora_idtb_editora` int(11) NOT NULL,
   `tb_categoria_idtb_categoria` int(11) NOT NULL,
   PRIMARY KEY (`idtb_livro`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -166,7 +166,7 @@ CREATE TABLE `tb_livro` (
 
 LOCK TABLES `tb_livro` WRITE;
 /*!40000 ALTER TABLE `tb_livro` DISABLE KEYS */;
-INSERT INTO `tb_livro` VALUES (2,'Livro de teste','20','30',2019,'testito',1,2);
+INSERT INTO `tb_livro` VALUES (2,'Livro de teste','20','30',2019,'testito',1,2),(3,'Remédio mãe','20','2ª',2019,'nenhum.txt',1,3);
 /*!40000 ALTER TABLE `tb_livro` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -216,8 +216,32 @@ CREATE TABLE `tb_reserva` (
 
 LOCK TABLES `tb_reserva` WRITE;
 /*!40000 ALTER TABLE `tb_reserva` DISABLE KEYS */;
-INSERT INTO `tb_reserva` VALUES ('2019-05-19 18:00:16','.','2019-05-21 03:00:00',1,9),('2019-05-19 18:01:32','.','2019-05-23 03:00:00',2,9);
+INSERT INTO `tb_reserva` VALUES ('2019-06-24 16:33:53','.','0000-00-00 00:00:00',2,8),('2019-05-19 18:01:32','.','2019-05-23 03:00:00',2,9),('2019-06-24 21:02:57','.','0000-00-00 00:00:00',3,9),('2019-06-24 21:01:35','.','0000-00-00 00:00:00',4,6),('2019-06-24 21:04:36','.','0000-00-00 00:00:00',4,10);
 /*!40000 ALTER TABLE `tb_reserva` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tb_tipo_usuario`
+--
+
+DROP TABLE IF EXISTS `tb_tipo_usuario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tb_tipo_usuario` (
+  `idtb_tipo_usuario` int(11) NOT NULL AUTO_INCREMENT,
+  `dc_tipo` varchar(150) NOT NULL,
+  PRIMARY KEY (`idtb_tipo_usuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tb_tipo_usuario`
+--
+
+LOCK TABLES `tb_tipo_usuario` WRITE;
+/*!40000 ALTER TABLE `tb_tipo_usuario` DISABLE KEYS */;
+INSERT INTO `tb_tipo_usuario` VALUES (1,'Aluno'),(2,'Professor'),(3,'Diretor');
+/*!40000 ALTER TABLE `tb_tipo_usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -234,7 +258,7 @@ CREATE TABLE `tb_usuario` (
   `email` varchar(255) NOT NULL,
   `senha` varchar(255) NOT NULL,
   PRIMARY KEY (`idtb_usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -243,7 +267,7 @@ CREATE TABLE `tb_usuario` (
 
 LOCK TABLES `tb_usuario` WRITE;
 /*!40000 ALTER TABLE `tb_usuario` DISABLE KEYS */;
-INSERT INTO `tb_usuario` VALUES (1,'Savio Macedo',1,'saviom.cedo@hotmail.com','finalitymu'),(2,'Macedo',3,'saviom.cedo@hotmails.com','finalitymu'),(3,'admin',3,'admin@admin.com','admin');
+INSERT INTO `tb_usuario` VALUES (2,'Macedo',3,'saviom.cedo@hotmails.com','8e2d0b095577b56e8eff35874d73d4c8'),(3,'admin',3,'admin@admin.com','21232f297a57a5a743894a0e4a801fc3'),(4,'Rita de Paiva',2,'rita@paiva.com','698dc19d489c4e4db73e28a713eab07b');
 /*!40000 ALTER TABLE `tb_usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -256,4 +280,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-19 17:34:47
+-- Dump completed on 2019-06-24 18:22:01

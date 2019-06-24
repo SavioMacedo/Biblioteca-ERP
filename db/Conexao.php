@@ -21,6 +21,7 @@ class Conexao
         if (!isset(self::$pdo)) {
             try {
                 self::$pdo = new PDO(DRIVER.":host=" . HOSTNAME . "; dbname=" . DBNAME . "; charset=" . CHARSET . ";", USER, PASS);
+                self::$pdo->exec("SET lc_time_names = 'pt_BR'");
             } catch (PDOException $e) {
                 print "Erro: " . $e->getMessage();
             }

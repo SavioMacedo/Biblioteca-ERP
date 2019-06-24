@@ -1,10 +1,13 @@
 <?php
 
 require_once "./dao/daoUsuario.php";
+require_once "./dao/daoTipoUsuario.php";
 require_once "./modelo/usuario.php";
 require_once "./db/Conexao.php";
 
 $object = new daoUsuario();
+$objectTipoUsuario = new daoTipoUsuario();
+$objectTipoUsuario = $objectTipoUsuario->getAll();
 
 // Verificar se foi enviando dados via POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -77,11 +80,10 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                 echo (isset($nome) && ($nome != null || $nome != "")) ? $nome : '';
                                 ?>" required/>
                                 <br/>
-                                <Label>Tipo</Label>
-                                <input class="form-control" type="text" size="50" name="tipo" value="<?php
-                                // Preenche o nome no campo nome com um valor "value"
-                                echo (isset($tipo) && ($tipo != null || $tipo != "")) ? $tipo : '';
-                                ?>" required/>
+                                <?php
+                                $selectedValue = (isset($tipo) && ($tipo != null || $tipo != "")) ? $tipo : '';
+                                Functions::DropDownFor($objectTipoUsuario, "tipo", "idtb_tipo_usuario", "dc_tipo", "Tipo", $selectedValue);
+                                ?>
                                 <br/>
                                 <Label>Email</Label>
                                 <input class="form-control" type="text" size="50" name="email" value="<?php
